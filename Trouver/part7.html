@@ -1,0 +1,54 @@
+<!doctype html>
+<html>
+    <head>
+            <script src="js/phaser.min.js"></script>
+            <style>
+                body{margin:0}
+            </style>
+            <script type="text/javascript">
+
+
+
+var game = new Phaser.Game( 500, 500, Phaser.CANVAS, '', { preload: preload, create: create, update: update, render: render } ),
+    radius = 100,
+    rotation = 0,
+    rotationSpeed = 0.01,
+    circle,
+    player;
+
+function preload() {
+  game.load.image( 'player', 'https://s3-us-west-2.amazonaws.com/s.cdpn.io/836/dude.png' );
+}
+
+function create() {
+  game.physics.startSystem( Phaser.Physics.ARCADE );
+  circle = new Phaser.Circle( game.world.centerX, game.world.centerY, radius * 2 );
+  player = game.add.sprite( game.world.centerX, game.world.centerY, 'player' );
+  player.anchor.set( 0.5 );  
+  game.physics.arcade.enable( player );
+}
+
+function update() {
+  // set the player rotation (an offset of a quarter turn since the sprite is facing up)
+  player.rotation = rotation + Math.PI/2;
+  
+  // from the center of the canvas
+  // set the proper coordinates for the current rotation
+  // based on the radius + half the player's larger side (since we moved the anchor to 0.5)
+ player.x = game.world.centerX + Math.cos( rotation ) * ( radius + player.height / 2 );
+ player.y = game.world.centerY + Math.sin( rotation ) * ( radius + player.height / 2 ); 
+  
+  // increment rotation
+  rotation += rotationSpeed;
+}
+
+function render() {  
+  game.debug.body( player );
+  game.debug.geom( circle, 'rgba(255, 0, 0, 0.25)' ) ;
+}
+
+        </script>
+    </head>
+    <body>
+    </body>
+</html>
